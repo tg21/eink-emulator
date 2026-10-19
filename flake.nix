@@ -84,6 +84,12 @@
             # macOS specific dependencies if needed
             pkgs.darwin.apple_sdk.frameworks.Cocoa
           ];
+
+          shellHook = ''
+            export AR="gcc-ar"
+            export RANLIB="gcc-ranlib"
+            export NM="gcc-nm"
+          '';
         };
       });
 }
