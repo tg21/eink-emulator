@@ -83,6 +83,12 @@
 
             # required for deleting machine
             pkgs.lsof
+          ] ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isLinux [
+            # QEMU display backends. Without these QEMU only offers the
+            # headless "none" and "dbus" backends, so ./eink run boots the
+            # guest but never opens a window.
+            pkgs.gtk3
+            pkgs.SDL2
           ] ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
             # macOS specific dependencies if needed
             pkgs.darwin.apple_sdk.frameworks.Cocoa
@@ -92,6 +98,12 @@
             export AR="gcc-ar"
             export RANLIB="gcc-ranlib"
             export NM="gcc-nm"
+
+            if [ -f qemu/build/config-host.h ] &&
+               ! grep -q '^#define CONFIG_GTK$' qemu/build/config-host.h; then
+              echo "eink-emulator: the existing QEMU build has no GTK display backend." >&2
+              echo "Run 'rm -rf qemu/build && ./eink build' once to enable the VM window." >&2
+            fi
           '';
         };
       });
