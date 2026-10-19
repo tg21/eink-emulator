@@ -80,6 +80,9 @@
             pkgs.pixman
             pkgs.dtc
             pkgs.libslirp
+
+            # required for deleting machine
+            pkgs.lsof
           ] ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
             # macOS specific dependencies if needed
             pkgs.darwin.apple_sdk.frameworks.Cocoa
